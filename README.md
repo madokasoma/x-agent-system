@@ -1,71 +1,212 @@
-# X投稿生成システム (AI関連)
+# AI Agent Homepage Builder
 
-AI関連のX（旧Twitter）投稿を自動生成するPythonスクリプトです。
+**参考URLを分析し、ユーザーの素材で自動的にホームページを生成するAIエージェントシステム**
 
-## 機能
+## 🎯 概要
 
-- AI技術、機械学習、LLMに関する高品質な投稿を50件生成
-- JSON形式とテキスト形式の両方で出力
-- 投稿の統計情報（文字数、平均など）を表示
+このシステムは、以下の流れでホームページを自動生成します：
 
-## 生成された投稿のカテゴリ
+1. **参考URLを分析** - 企業サイト等のデザイン・レイアウトを解析
+2. **ユーザー素材を提供** - 会社名、説明文、画像などを提供
+3. **AIが自動生成** - HTML/CSS/JavaScriptを完全自動生成
+4. **プレビュー＆調整** - ローカルでプレビュー、必要に応じて調整
 
-1. **AI技術・トレンド** (10件)
-   - LLMの進化、プロンプトエンジニアリング、RAG、AIエージェントなど
+## ✨ 主な機能
 
-2. **実践的なヒント・Tips** (10件)
-   - 効果的なプロンプト、Few-shot learning、Chain-of-Thoughtなど
+- 🔍 **URL分析エージェント**: Webサイトの構造とデザインを自動解析
+- 📝 **コンテンツ管理**: ユーザーの素材を整理・最適化
+- 🎨 **ページ生成**: レスポンシブなHTML/CSS/JSを自動生成
+- 👀 **プレビュー機能**: ローカルサーバーで即座に確認
+- ♿ **アクセシビリティ対応**: WCAG準拠のセマンティックHTML
+- 📱 **レスポンシブデザイン**: PC/タブレット/スマホ完全対応
 
-3. **ビジネス・業務活用** (10件)
-   - メール作成、議事録自動化、競合分析、レポート作成など
+## 🚀 クイックスタート
 
-4. **AI倫理・社会的影響** (10件)
-   - AI倫理、バイアス問題、プライバシー、規制など
-
-5. **技術詳細・開発者向け** (10件)
-   - モデル評価、ハイパーパラメータ、MLOpsなど
-
-## 使い方
+### 1. セットアップ
 
 ```bash
-python3 generate_posts.py
+# リポジトリをクローン
+git clone <your-repo-url>
+cd x-agent-system
+
+# 依存パッケージをインストール
+pip install -r requirements.txt
+
+# 環境変数を設定
+cp .env.example .env
+# .env ファイルを編集してAPIキーを設定
 ```
 
-## 出力ファイル
+### 2. APIキーの設定
 
-- `ai_posts.json` - JSON形式（プログラムでの利用に最適）
-- `ai_posts.txt` - テキスト形式（人間が読みやすい形式）
+`.env` ファイルに以下を設定：
 
-## 投稿の特徴
-
-- ✅ 適切な文字数（平均75文字前後）
-- ✅ 関連ハッシュタグ付き
-- ✅ 絵文字で視認性向上
-- ✅ 具体的で実用的な内容
-- ✅ 多様なトピックをカバー
-
-## 統計情報
-
-- 総投稿数: 50件
-- 総文字数: 約3,800文字
-- 平均文字数: 約76文字/投稿
-- 文字数範囲: 58-98文字
-
-## 投稿例
-
-```
-🤖 2024年のAI業界、LLMの進化が止まらない。GPT-4からClaude、Geminiまで、競争が激化中。次の革新はどこから来る？ #AI #機械学習
-
-💡 プロンプトエンジニアリングのコツ：具体的な指示 + 例示 + 制約条件を明確に。この3つでAIの出力品質が劇的に向上します。 #プロンプトエンジニアリング #ChatGPT
-
-🔍 RAG（Retrieval-Augmented Generation）が注目される理由：LLMの知識を最新情報でリアルタイム補完できる点。企業のAI活用に必須の技術です。 #RAG #AI活用
+```bash
+ANTHROPIC_API_KEY=sk-ant-xxxxx  # 必須
+OPENAI_API_KEY=sk-xxxxx         # オプション
 ```
 
-## 要件
+### 3. 使い方
 
-- Python 3.x
-- 標準ライブラリのみ使用（追加のインストール不要）
+#### 方法A: CLIを使う
 
-## ライセンス
+```bash
+# 1. 参考サイトを分析
+python cli.py analyze https://example-company.com --output my_project
+
+# 2. コンテンツを準備（YAMLファイルで）
+# user_materials/texts/my_project.yaml を編集
+
+# 3. ホームページを生成
+python cli.py generate my_project
+
+# 4. プレビュー
+python cli.py preview my_project
+# → ブラウザで http://localhost:8000 を開く
+```
+
+#### 方法B: Pythonスクリプトで使う
+
+```python
+from agents.url_analyzer import URLAnalyzerAgent
+from agents.content_manager import ContentManagerAgent
+from agents.page_generator import PageGeneratorAgent
+
+# 1. 参考サイト分析
+analyzer = URLAnalyzerAgent()
+template_data = analyzer.execute('https://example-corporate.com')
+
+# 2. ユーザー素材を準備
+content_manager = ContentManagerAgent()
+content_manager.add_text('company_name', 'マイカンパニー株式会社', category='company_info')
+content_manager.add_text('tagline', 'イノベーションで未来を創る', category='company_info')
+content_manager.add_image('hero_image', 'path/to/hero.jpg')
+
+# 3. ホームページ生成
+generator = PageGeneratorAgent()
+site_path = generator.execute(
+    template_data=template_data,
+    content=content_manager.get_content_map(),
+    output_dir='output/my_project'
+)
+
+print(f"✅ サイト生成完了: {site_path}")
+```
+
+## 📁 プロジェクト構造
+
+```
+x-agent-system/
+├── agents/                    # AIエージェントモジュール
+│   ├── base_agent.py         # ベースエージェントクラス
+│   ├── url_analyzer.py       # URL分析エージェント
+│   ├── content_manager.py    # コンテンツ管理
+│   └── page_generator.py     # ページ生成
+├── utils/                     # ユーティリティ
+│   ├── html_parser.py        # HTML解析
+│   └── css_analyzer.py       # CSS解析
+├── templates/                 # テンプレート
+├── output/                    # 生成されたサイト
+├── user_materials/            # ユーザー素材
+├── config/                    # 設定ファイル
+├── cli.py                     # CLIインターフェース
+└── requirements.txt           # 依存パッケージ
+```
+
+## 📚 ドキュメント
+
+- **[設計書](HOMEPAGE_BUILDER_DESIGN.md)** - システム全体の設計
+- **[実装ガイド](IMPLEMENTATION_GUIDE.md)** - 詳細な実装手順
+
+## 🎨 サポートするデザインパターン
+
+- **コーポレートサイト**: 企業の公式サイト
+- **スタートアップ/SaaS**: モダンなサービスサイト
+- **ポートフォリオ**: 個人/クリエイター向け
+- **ランディングページ**: 1ページ完結型
+
+## 🛠️ 技術スタック
+
+- **Python 3.10+**: メイン言語
+- **Anthropic Claude API**: AI分析・生成
+- **BeautifulSoup4**: HTML解析
+- **Jinja2**: テンプレートエンジン
+- **Pillow**: 画像処理
+
+## 📊 生成されるサイトの特徴
+
+- ✅ **レスポンシブデザイン**: モバイルファースト
+- ✅ **SEO最適化**: メタタグ、構造化データ
+- ✅ **アクセシビリティ**: ARIA属性、セマンティックHTML
+- ✅ **高速読み込み**: 最適化された画像・CSS
+- ✅ **モダンCSS**: Flexbox/Grid使用
+
+## 🔧 要件
+
+- Python 3.10 以上
+- Anthropic Claude API キー（必須）
+- OpenAI API キー（オプション）
+
+## 📝 使用例
+
+### ユーザー素材の準備（YAML形式）
+
+```yaml
+# user_materials/texts/my_project.yaml
+
+company_info:
+  company_name: "マイカンパニー株式会社"
+  tagline: "イノベーションで未来を創る"
+  description: "私たちは最先端のAI技術で、ビジネスの課題を解決します。"
+  address: "東京都渋谷区..."
+  email: "info@example.com"
+
+sections:
+  - type: "features"
+    title: "サービスの特徴"
+    content: "高品質なAIソリューションを提供"
+
+  - type: "about"
+    title: "会社概要"
+    content: "2020年設立。AIエンジニア30名が在籍。"
+```
+
+## 🚧 開発ロードマップ
+
+### Phase 1: 基本機能（現在）
+- [x] URL分析エージェント
+- [x] コンテンツ管理
+- [x] ページ生成
+- [x] プレビュー機能
+
+### Phase 2: 拡張機能
+- [ ] 複数ページ生成（About、Contact等）
+- [ ] お問い合わせフォーム
+- [ ] 多言語対応
+- [ ] CMSとの統合
+
+### Phase 3: 高度な機能
+- [ ] A/Bテスト自動生成
+- [ ] アクセス解析統合
+- [ ] デプロイ自動化（Netlify/Vercel）
+- [ ] AI による継続的改善提案
+
+## 🤝 コントリビューション
+
+プルリクエスト大歓迎です！
+
+## 📄 ライセンス
 
 MIT License
+
+## 🙏 謝辞
+
+- Anthropic Claude API
+- BeautifulSoup4
+- その他のオープンソースライブラリ
+
+---
+
+**詳細な設計・実装手順は以下をご覧ください:**
+- [設計書 (HOMEPAGE_BUILDER_DESIGN.md)](HOMEPAGE_BUILDER_DESIGN.md)
+- [実装ガイド (IMPLEMENTATION_GUIDE.md)](IMPLEMENTATION_GUIDE.md)

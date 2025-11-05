@@ -1,0 +1,37 @@
+# AI Agent Homepage Builder - 設定ファイル
+
+# API設定
+api:
+  anthropic:
+    model: "claude-3-5-sonnet-20241022"
+    max_tokens: 4096
+    temperature: 0.7
+
+  openai:
+    model: "gpt-4-turbo-preview"
+    max_tokens: 2048
+
+# 出力設定
+output:
+  directory: "output"
+  image_quality: 85
+  image_max_width: 1920
+  image_format: "webp"
+
+# 分析設定
+analysis:
+  timeout: 30
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+  max_retries: 3
+
+# 生成設定
+generation:
+  responsive_breakpoints:
+    mobile: 768
+    tablet: 1024
+    desktop: 1280
+
+  seo:
+    generate_sitemap: true
+    generate_robots_txt: true
+    add_structured_data: true
